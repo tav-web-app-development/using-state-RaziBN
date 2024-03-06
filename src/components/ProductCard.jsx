@@ -1,10 +1,12 @@
+import { useState } from "react";
 export default function ProductCard({ product }) {
-  let currentImageIndex = 0;
-  let itemsInCart = 0;
-
+  let [currentImageIndex, setCurrentImageIndex] = useState(0);
+  let [showdetail, setShowDetail] = useState(false);
+  let [addedToCart, setAddedToCart] = useState(0);
+  //let itemsInCart = 0;
   const handleAddToCartClick = () => {
-    itemsInCart++;
-    alert(`you added ${itemsInCart}`);
+    setAddedToCart(addedToCart + 1);
+    alert(`you added ${addedToCart} items to your cart`);
   };
   return (
     <>
@@ -13,18 +15,41 @@ export default function ProductCard({ product }) {
           src={product.imageUrls[currentImageIndex] + " " + product.name}
           alt={product.name}
         />
-        <button>Next</button>
-        <button>Previous</button>
+        <br />
+        <button
+          onClick={() => {
+            setCurrentImageIndex((currentImageIndex += 1));
+          }}
+          disabled={currentImageIndex === product.imageUrls.length - 1}
+        >
+          Next
+        </button>
+        <button
+          onClick={() => {
+            setCurrentImageIndex((currentImageIndex -= 1));
+          }}
+          disabled={currentImageIndex === 0}
+        >
+          Previous
+        </button>
       </div>
 
       <h3>{product.name}</h3>
-      <p>{product.description}</p>
-      <button>Show Description</button>
+      <p>{showdetail ? product.description : ""}</p>
+      <button
+        onClick={() => {
+          setShowDetail(!showdetail);
+        }}
+      >
+        {showdetail ? "Hide Description" : "Show Description"}
+      </button>
       <div className="price">${product.price}</div>
 
       <button onClick={handleAddToCartClick}>Add to Cart</button>
-
+      <span>{addedToCart}</span>
+      <br />
       {!product.isInStock && "The product is out of stock"}
+      <br />
     </>
   );
 }
